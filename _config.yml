@@ -4,5 +4,5 @@ theme: minima
 plugins:
   - jekyll-feed
 author:
-  name: Milad Vazan
+  #name: Milad Vazan
  
