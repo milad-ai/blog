@@ -1,10 +1,12 @@
-title: My Blog
-description: A place to share thoughts and experiences
+title: Milad Vazan's Blog
+email: your-email@example.com
+description: >- 
+  A simple blog by Milad Vazan
+baseurl: "" 
+url: "https://miladvazan.github.io" 
+twitter_username: miladvazan
+github_username:  miladvazan
+
 theme: minima
 plugins:
   - jekyll-feed
-author:
-  name: Milad Vazan
-  email: mail@miladai.ir
-
-
