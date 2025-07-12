@@ -1,5 +1,6 @@
 ---
 layout: home
+hide_header: true
 ---
 
 <div class="hero">
