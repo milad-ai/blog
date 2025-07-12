@@ -2,8 +2,7 @@
 layout: home
 ---
 
-<div class="hero">
-  <h1>Welcome to My Blog</h1>
-  <p>This is where I share my knowledge, experiences, and thoughts. I hope you find the content valuable.</p>
-  <a href="http://miladai.ir" class="btn">About Me</a>
+<div class="home-content">
+  <h2>Welcome to My Blog</h2>
+  <p>This is where I share my knowledge and experiences.</p>
 </div>
