@@ -3,7 +3,7 @@ description: A place to share thoughts and experiences
 theme: minima
 plugins:
   - jekyll-feed
-#author:
- # name: Milad Vazan
- # email: mail@miladai.ir
-header_pages: []
+author:
+  name: Milad Vazan
+  email: mail@miladai.ir
+
