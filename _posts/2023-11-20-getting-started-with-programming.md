@@ -1,7 +1,3 @@
-
-### Second Post (`_posts/2023-11-20-getting-started-with-programming.md`):
-
-
 ---
 layout: post
 title: "How to Start Programming"
