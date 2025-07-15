@@ -1,5 +1,5 @@
-title: My Beautiful Blog
-description: A place to share thoughts and experiences
+#title: My Beautiful Blog
+#description: A place to share thoughts and experiences
 theme: minima
 plugins:
   - jekyll-feed
