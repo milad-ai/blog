@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>My Fancy Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f7f9fc;
+      color: #333;
+      max-width: 800px;
+      margin: auto;
+      padding: 2rem;
+    }
+    h1, h2 {
+      color: #222;
+    }
+    .post-list a {
+      display: block;
+      margin: 0.8rem 0;
+      font-size: 1.2rem;
+      color: #0077cc;
+      text-decoration: none;
+    }
+    .post-list a:hover {
+      text-decoration: underline;
+    }
+    #back-button {
+      display: inline-block;
+      margin: 1rem 0;
+      color: #888;
+      text-decoration: none;
+    }
+    pre {
+      background: #eee;
+      padding: 1rem;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>📝 My Fancy Blog</h1>
+  <div id="content">Loading...</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    const posts = [
+      { file: 'post1.md', title: 'Hello World' },
+      { file: 'second.md', title: 'Second Post' }
+    ];
+
+    const content = document.getElementById('content');
+
+    function renderList() {
+      let html = '<h2>Posts</h2><div class="post-list">';
+      posts.forEach(p => {
+        html += `<a href="#${p.file}">${p.title}</a>`;
+      });
+      html += '</div>';
+      content.innerHTML = html;
+    }
+
+    function renderPost(filename) {
+      const post = posts.find(p => p.file === filename);
+      if (!post) {
+        content.innerHTML = `<p>Post not found.</p><a href="#" id="back-button">← Back</a>`;
+        return;
+      }
+
+      fetch(`_posts/${filename}`)
+        .then(res => res.text())
+        .then(md => {
+          content.innerHTML = `
+            <a href="#" id="back-button">← Back</a>
+            <h2>${post.title}</h2>
+            <div>${marked.parse(md)}</div>
+          `;
+        })
+        .catch(() => {
+          content.innerHTML = `<p>Error loading post.</p><a href="#" id="back-button">← Back</a>`;
+        });
+    }
+
+    function router() {
+      const hash = location.hash.slice(1);
+      if (hash) {
+        renderPost(hash);
+      } else {
+        renderList();
+      }
+    }
+
+    window.addEventListener('hashchange', router);
+    window.addEventListener('load', router);
+  </script>
+</body>
+</html>
