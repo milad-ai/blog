@@ -2,51 +2,47 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>My Fancy Blog</title>
+  <title>My Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
   <style>
     body {
       font-family: 'Inter', sans-serif;
-      background: #f9f9f9;
-      color: #333;
       max-width: 800px;
       margin: auto;
       padding: 2rem;
+      background: #fafafa;
+      color: #333;
     }
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 1rem;
+    a {
+      color: #007acc;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
     }
     .post-list a {
       display: block;
       margin: 1rem 0;
       font-size: 1.1rem;
-      color: #0077cc;
-      text-decoration: none;
     }
-    .post-list a:hover {
-      text-decoration: underline;
-    }
-    #back-button {
-      display: inline-block;
-      margin: 1rem 0;
+    .date {
+      font-size: 0.85rem;
       color: #888;
-      text-decoration: none;
     }
     pre {
       background: #eee;
       padding: 1rem;
       overflow-x: auto;
     }
-    .date {
-      font-size: 0.85rem;
-      color: #888;
+    #back-button {
+      margin-bottom: 1rem;
+      display: inline-block;
     }
   </style>
 </head>
 <body>
-  <h1>📝 My Fancy Blog</h1>
+  <h1>📝 My Blog</h1>
   <div id="content">Loading...</div>
 
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -58,10 +54,9 @@
 
     const content = document.getElementById('content');
 
-    // استخراج عنوان و تاریخ از فایل Markdown
-    function parseFrontMatter(markdown) {
-      const match = /^---\n([\s\S]+?)\n---/.exec(markdown);
-      let meta = { title: "Untitled", date: "" };
+    function parseFrontMatter(md) {
+      const match = /^---\n([\s\S]+?)\n---/.exec(md);
+      let meta = { title: '', date: '' };
       if (match) {
         match[1].split('\n').forEach(line => {
           const [key, ...rest] = line.split(':');
@@ -71,44 +66,47 @@
       return meta;
     }
 
+    function getContentWithoutFrontMatter(md) {
+      return md.replace(/^---\n[\s\S]+?\n---/, '').trim();
+    }
+
     function renderList() {
-      let html = '<h2>Posts</h2><div class="post-list">';
       Promise.all(
         posts.map(p =>
           fetch(`posts/${p.file}`)
-            .then(res => res.text())
+            .then(res => res.ok ? res.text() : '')
             .then(md => {
               const meta = parseFrontMatter(md);
-              const slug = p.file;
+              const title = meta.title || p.file.replace(/^\d{4}-\d{2}-\d{2}-/, '').replace(/\.md$/, '');
               const date = meta.date || p.file.slice(0, 10);
-              const title = meta.title || slug;
-              return `<a href="#${slug}">${title} <span class="date">(${date})</span></a>`;
+              return `<a href="#${p.file}">${title} <span class="date">(${date})</span></a>`;
             })
         )
       ).then(links => {
-        html += links.join('');
-        html += '</div>';
-        content.innerHTML = html;
+        content.innerHTML = `<h2>Posts</h2><div class="post-list">${links.join('')}</div>`;
       });
     }
 
     function renderPost(filename) {
       fetch(`posts/${filename}`)
-        .then(res => res.text())
+        .then(res => {
+          if (!res.ok) throw new Error("Not found");
+          return res.text();
+        })
         .then(md => {
           const meta = parseFrontMatter(md);
-          const contentMd = md.replace(/^---\n[\s\S]+?\n---/, '').trim();
-          const title = meta.title || filename;
+          const html = marked.parse(getContentWithoutFrontMatter(md));
+          const title = meta.title || filename.replace(/^\d{4}-\d{2}-\d{2}-/, '').replace(/\.md$/, '');
           const date = meta.date || filename.slice(0, 10);
           content.innerHTML = `
             <a href="#" id="back-button">← Back</a>
             <h2>${title}</h2>
             <p class="date">${date}</p>
-            <div>${marked.parse(contentMd)}</div>
+            <div>${html}</div>
           `;
         })
-        .catch(() => {
-          content.innerHTML = `<p>Error loading post.</p><a href="#" id="back-button">← Back</a>`;
+        .catch(err => {
+          content.innerHTML = `<p>Post not found.</p><a href="#">← Back</a>`;
         });
     }
 
