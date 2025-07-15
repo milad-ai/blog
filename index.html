@@ -69,7 +69,7 @@
         return;
       }
 
-      fetch(`_posts/${filename}`)
+      fetch(`posts/${filename}`)
         .then(res => res.text())
         .then(md => {
           content.innerHTML = `
