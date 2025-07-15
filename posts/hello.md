@@ -1,9 +1,4 @@
----
-layout: post
-title: "My First Blog Post"
-date: 2023-11-15
-categories: [general]
----
+
 
 # Welcome to My Blog!
 
