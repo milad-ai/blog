@@ -5,151 +5,85 @@
   <title>My Markdown Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    :root {
-      --bg: #fdfdfd;
-      --fg: #222;
-      --accent: #007acc;
-    }
-    body.dark {
-      --bg: #1e1e1e;
-      --fg: #eee;
-      --accent: #66d9ef;
-    }
     body {
-      background: var(--bg);
-      color: var(--fg);
       font-family: sans-serif;
+      background: #fdfdfd;
+      color: #222;
+      padding: 2rem;
       margin: 0;
-      padding: 2rem 1rem;
-      transition: background 0.3s, color 0.3s;
     }
-    h1, h2 {
-      color: var(--accent);
-    }
-    header {
-      text-align: center;
-      margin-bottom: 2rem;
+    .container {
+      max-width: 700px;
+      margin: auto;
     }
     a {
-      color: var(--accent);
+      color: #007acc;
       text-decoration: none;
+      font-size: 1.2rem;
     }
     a:hover {
       text-decoration: underline;
     }
-    .post-link {
-      margin: 1rem 0;
-      font-size: 1.2rem;
+    .post-title {
+      margin-bottom: 1rem;
     }
     .post-content {
-      max-width: 700px;
-      margin: 2rem auto;
-      background: white;
-      padding: 1.5rem;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-top: 2rem;
     }
-    body.dark .post-content {
-      background: #2a2a2a;
-    }
-    #toggleTheme {
-      background: none;
-      border: 1px solid var(--accent);
-      color: var(--accent);
-      padding: 0.4rem 0.8rem;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    #backBtn {
-      margin: 2rem auto;
-      display: block;
+    .back {
+      margin-top: 2rem;
+      display: inline-block;
     }
   </style>
 </head>
 <body>
-  <header>
+  <div class="container">
     <h1>My Markdown Blog</h1>
-    <button id="toggleTheme">🌓 Toggle Theme</button>
-  </header>
-
-  <div id="homeView">
-    <div id="postList"></div>
-  </div>
-
-  <div id="postView" style="display:none;">
-    <button id="backBtn">← Back to Posts</button>
-    <div id="postContent" class="post-content"></div>
+    <div id="content"></div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script>
-    // Define your post list manually
-    const postFiles = [
+    const posts = [
       { file: "post1.md", title: "Welcome to the Blog" },
       { file: "post2.md", title: "Why I Love Markdown" },
       { file: "post3.md", title: "Productivity Tips" }
     ];
 
-    const postListDiv = document.getElementById("postList");
-    const postView = document.getElementById("postView");
-    const homeView = document.getElementById("homeView");
-    const postContent = document.getElementById("postContent");
+    const contentDiv = document.getElementById('content');
 
-    function showHome() {
-      postView.style.display = "none";
-      homeView.style.display = "block";
-      history.pushState({}, "", location.pathname);
+    function getQueryParam(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
     }
 
-    function showPost(title, file) {
-      fetch(`_posts/${file}`)
-        .then(res => res.text())
-        .then(md => {
-          postContent.innerHTML = `<h2>${title}</h2>` + marked.parse(md);
-          homeView.style.display = "none";
-          postView.style.display = "block";
-          history.pushState({}, "", `#${file}`);
-        });
+    const selectedPost = getQueryParam('post');
+
+    if (selectedPost) {
+      const post = posts.find(p => p.file === selectedPost);
+      if (post) {
+        fetch(`_posts/${post.file}`)
+          .then(res => res.ok ? res.text() : Promise.reject('Post not found'))
+          .then(md => {
+            contentDiv.innerHTML = `
+              <div class="post-content">
+                <h2>${post.title}</h2>
+                ${marked.parse(md)}
+                <a class="back" href="index.html">← Back to all posts</a>
+              </div>
+            `;
+          })
+          .catch(err => {
+            contentDiv.innerHTML = `<p>⚠️ Error loading post.</p>`;
+          });
+      } else {
+        contentDiv.innerHTML = `<p>⚠️ Post not found.</p>`;
+      }
+    } else {
+      contentDiv.innerHTML = posts.map(post =>
+        `<div class="post-title"><a href="?post=${post.file}">${post.title}</a></div>`
+      ).join('');
     }
-
-    function renderPostList() {
-      postFiles.forEach(post => {
-        const div = document.createElement("div");
-        div.className = "post-link";
-        div.innerHTML = `<a href="#${post.file}">${post.title}</a>`;
-        div.querySelector("a").onclick = e => {
-          e.preventDefault();
-          showPost(post.title, post.file);
-        };
-        postListDiv.appendChild(div);
-      });
-    }
-
-    // Theme toggle
-    const themeBtn = document.getElementById("toggleTheme");
-    themeBtn.onclick = () => {
-      document.body.classList.toggle("dark");
-      localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
-    };
-    if (localStorage.getItem("theme") === "dark") {
-      document.body.classList.add("dark");
-    }
-
-    document.getElementById("backBtn").onclick = showHome;
-
-    // Handle direct link to a post
-    function handleHash() {
-      const hash = location.hash.slice(1);
-      const match = postFiles.find(p => p.file === hash);
-      if (match) showPost(match.title, match.file);
-      else showHome();
-    }
-
-    window.addEventListener("popstate", handleHash);
-
-    // Init
-    renderPostList();
-    handleHash();
   </script>
 </body>
 </html>
