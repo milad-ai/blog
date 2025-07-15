@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>My Markdown Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #fdfdfd;
+      --fg: #222;
+      --accent: #0077cc;
+    }
+    body.dark {
+      --bg: #1e1e1e;
+      --fg: #ddd;
+      --accent: #66d9ef;
+    }
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 2rem 1rem;
+      transition: background 0.3s, color 0.3s;
+    }
+    h1, h2, h3 {
+      color: var(--accent);
+    }
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    #search {
+      width: 100%;
+      max-width: 400px;
+      margin: 1rem auto;
+      display: block;
+      padding: 0.5rem;
+      font-size: 1rem;
+    }
+    #posts .post {
+      background: white;
+      border-radius: 12px;
+      padding: 1rem;
+      margin: 1rem auto;
+      max-width: 700px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    body.dark #posts .post {
+      background: #2a2a2a;
+    }
+    #toggleTheme {
+      background: none;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    pre {
+      background: #eee;
+      padding: 1rem;
+      overflow-x: auto;
+    }
+    body.dark pre {
+      background: #333;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>My Markdown Blog</h1>
+    <button id="toggleTheme">🌓 Toggle Theme</button>
+    <input type="search" id="search" placeholder="Search posts..." />
+  </header>
+
+  <div id="posts"></div>
+
+  <!-- Include Marked.js via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    const posts = [
+      {
+        title: "Welcome to My Blog",
+        content: `
+# Welcome to My Blog
+
+Hello and welcome! This blog is fully static, written in a single HTML file, and uses **Markdown** for writing posts.  
+I will be writing about web development, life, productivity, and more.
+
+> Stay tuned for upcoming content!
+        `
+      },
+      {
+        title: "Why I Love Markdown",
+        content: `
+# Why I Love Markdown
+
+Markdown lets you write clean, readable content fast.
+
+## Benefits
+
+- Easy to write
+- Easy to convert to HTML
+- Supported almost everywhere
+
+\`\`\`js
+// Here's some JavaScript
+console.log("Hello, Markdown Blog!");
+\`\`\`
+        `
+      },
+      {
+        title: "Productivity Tips",
+        content: `
+# Productivity Tips
+
+Here are a few ways to stay productive:
+
+1. Use the Pomodoro Technique
+2. Avoid context switching
+3. Keep your tasks manageable
+
+> Small consistent progress wins.
+        `
+      }
+    ];
+
+    const postsContainer = document.getElementById('posts');
+    const searchInput = document.getElementById('search');
+    const toggleBtn = document.getElementById('toggleTheme');
+
+    function renderPosts(filtered = posts) {
+      postsContainer.innerHTML = '';
+      filtered.forEach(post => {
+        const div = document.createElement('div');
+        div.className = 'post';
+        div.innerHTML = `
+          <h2>${post.title}</h2>
+          ${marked.parse(post.content)}
+        `;
+        postsContainer.appendChild(div);
+      });
+    }
+
+    searchInput.addEventListener('input', () => {
+      const q = searchInput.value.toLowerCase();
+      const filtered = posts.filter(p =>
+        p.title.toLowerCase().includes(q) || p.content.toLowerCase().includes(q)
+      );
+      renderPosts(filtered);
+    });
+
+    toggleBtn.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    });
+
+    if (localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark');
+    }
+
+    renderPosts();
+  </script>
+</body>
+</html>
