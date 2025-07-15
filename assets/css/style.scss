@@ -1,6 +1,6 @@
 ---
 ---
-
+      
 @import "minima";
 
 // Color scheme
@@ -112,27 +112,6 @@ body {
   }
 }
 
-.site-footer {
-  background: $dark-color;
-  color: white;
-  padding: 2rem 0;
-  margin-top: 3rem;
-  
-  .footer-heading {
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-  }
-  
-  .social-media-list a {
-    color: $light-color;
-    
-    &:hover {
-      color: $secondary-color;
-      text-decoration: none;
-    }
-  }
-}
-
 /* Buttons */
 .btn {
   display: inline-block;
@@ -182,4 +161,14 @@ body {
       margin: 0 auto 2rem;
     }
   }
+}
+
+/* حذف کامل نمایش فوتر */
+.site-footer {
+  display: none !important;
+  visibility: hidden;
+  height: 0;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
 }
