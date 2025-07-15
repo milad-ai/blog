@@ -14,14 +14,6 @@
       --code-bg: #eee;
     }
 
-    .dark-mode {
-      --bg-color: #121212;
-      --text-color: #e0e0e0;
-      --link-color: #66b2ff;
-      --heading-color: #fff;
-      --code-bg: #1e1e1e;
-    }
-
     body {
       font-family: 'Inter', sans-serif;
       background: var(--bg-color);
@@ -29,7 +21,6 @@
       max-width: 800px;
       margin: auto;
       padding: 2rem;
-      transition: background 0.3s, color 0.3s;
     }
 
     h1, h2 {
@@ -38,8 +29,8 @@
 
     .post-list a {
       display: block;
-      margin: 0.8rem 0;
-      font-size: 1.2rem;
+      margin: 0.8rem 0 0.2rem;
+      font-size: 1.1rem;
       color: var(--link-color);
       text-decoration: none;
     }
@@ -62,50 +53,72 @@
       border-radius: 8px;
     }
 
-    #toggle-mode {
-      position: fixed;
-      top: 1rem;
-      right: 1rem;
-      background: var(--code-bg);
-      color: var(--text-color);
-      border: none;
-      padding: 0.5rem 1rem;
-      font-size: 0.9rem;
-      cursor: pointer;
+    .search-bar {
+      margin-bottom: 1rem;
+    }
+
+    .search-bar input {
+      width: 100%;
+      padding: 0.5rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
       border-radius: 5px;
-      transition: background 0.3s, color 0.3s;
     }
 
-    #toggle-mode:hover {
-      opacity: 0.9;
+    .tag {
+      display: inline-block;
+      background: #ddd;
+      padding: 2px 8px;
+      margin: 0 5px;
+      font-size: 0.85rem;
+      border-radius: 4px;
+      color: #555;
     }
 
-    a {
-      transition: color 0.3s;
+    .post-meta {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 1rem;
     }
   </style>
 </head>
 <body>
-  <button id="toggle-mode">🌙 Dark Mode</button>
   <h1>📝 My Fancy Blog</h1>
   <div id="content">Loading...</div>
 
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script>
     const posts = [
-      { file: 'hello.md', title: 'Hello World' },
-      { file: 'post1.md', title: 'Second Post' }
+      { file: 'hello.md', title: 'Hello World', date: '2025-07-01', tags: ['intro', 'welcome'] },
+      { file: 'post1.md', title: 'Second Post', date: '2025-07-10', tags: ['dev', 'update'] }
     ];
 
     const content = document.getElementById('content');
 
-    function renderList() {
-      let html = '<h2>Posts</h2><div class="post-list">';
-      posts.forEach(p => {
-        html += `<a href="#${p.file}">${p.title}</a>`;
-      });
-      html += '</div>';
+    function renderList(filter = '') {
+      let html = `
+        <div class="search-bar">
+          <input type="text" id="search" placeholder="🔍 جستجو در پست‌ها..." />
+        </div>
+        <h2>Posts</h2>
+        <div class="post-list">`;
+
+      posts
+        .filter(p => p.title.toLowerCase().includes(filter.toLowerCase()))
+        .forEach(p => {
+          html += `
+            <a href="#${p.file}">${p.title}</a>
+            <div class="post-meta">
+              🗓 ${p.date} | ${p.tags.map(tag => `<span class="tag">${tag}</span>`).join(' ')}
+            </div>`;
+        });
+
+      html += `</div>`;
       content.innerHTML = html;
+
+      document.getElementById('search').addEventListener('input', (e) => {
+        renderList(e.target.value);
+      });
     }
 
     function renderPost(filename) {
@@ -121,6 +134,7 @@
           content.innerHTML = `
             <a href="#" id="back-button">← Back</a>
             <h2>${post.title}</h2>
+            <div class="post-meta">🗓 ${post.date} | ${post.tags.map(tag => `<span class="tag">${tag}</span>`).join(' ')}</div>
             <div>${marked.parse(md)}</div>
           `;
         })
@@ -138,27 +152,6 @@
       }
     }
 
-    // Theme toggle logic
-    const toggleBtn = document.getElementById('toggle-mode');
-
-    function setTheme(mode) {
-      document.body.classList.toggle('dark-mode', mode === 'dark');
-      toggleBtn.textContent = mode === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
-      localStorage.setItem('theme', mode);
-    }
-
-    function toggleTheme() {
-      const isDark = document.body.classList.contains('dark-mode');
-      setTheme(isDark ? 'light' : 'dark');
-    }
-
-    toggleBtn.addEventListener('click', toggleTheme);
-
-    // Load theme from localStorage
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    setTheme(savedTheme);
-
-    // Initial render
     window.addEventListener('hashchange', router);
     window.addEventListener('load', router);
   </script>
