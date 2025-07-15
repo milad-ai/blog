@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>From Loss to Learn</title>
+  <title>Learnbound</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
   <style>
@@ -45,7 +45,14 @@
     .blog-subtitle {
       font-size: 1rem;
       color: var(--text-color);
+      margin-bottom: 1rem;
+    }
+
+    .brand-description {
+      font-size: 0.95rem;
+      color: var(--text-color);
       margin-bottom: 2rem;
+      line-height: 1.6;
     }
 
     .post-list a {
@@ -114,9 +121,12 @@
   
   <h1 id="blog-title"></h1>
   <div class="blog-subtitle">
-    A friendly space where machine learning gets simple — from model errors to meaningful understanding.
+    <em>"Always learning. Never standing still."</em>
   </div>
-  
+  <div class="brand-description">
+    <strong>Learnbound</strong> is a modern, friendly space for continuous discovery in machine learning, data science, and analytics. Whether you're debugging a neural net, writing a perfect SQL query, or just starting out — you're on a journey. And here, that journey never really ends. You're always <strong>bound to learn</strong>.
+  </div>
+
   <div id="content">Loading...</div>
 
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -125,15 +135,12 @@
       { file: 'hello.md', title: 'Hello World', date: '2025-07-01', tags: ['intro', 'welcome'] },
       { file: 'post1.md', title: 'Second Post', date: '2025-07-10', tags: ['dev', 'update'] },
       { file: '1.md', title: 'bias', date: '2025-07-01', tags: ['intro', 'welcome'] }
-    
-    
     ];
 
     const content = document.getElementById('content');
 
     function renderList() {
       let html = `<h2>Posts</h2><div class="post-list">`;
-
       posts.forEach(p => {
         html += `
           <a href="#${p.file}">${p.title}</a>
@@ -141,7 +148,6 @@
             🗓 ${p.date} | ${p.tags.map(tag => `<span class="tag">${tag}</span>`).join(' ')}
           </div>`;
       });
-
       html += `</div>`;
       content.innerHTML = html;
     }
@@ -207,7 +213,7 @@
     window.addEventListener('load', () => {
       loadTheme();
       router();
-      typeTitle('📝 From loss to learn', 'blog-title');
+      typeTitle('📘 Learnbound', 'blog-title');
     });
   </script>
 </body>
