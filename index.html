@@ -8,19 +8,20 @@
   <style>
     body {
       font-family: 'Inter', sans-serif;
-      background: #f7f9fc;
+      background: #f9f9f9;
       color: #333;
       max-width: 800px;
       margin: auto;
       padding: 2rem;
     }
-    h1, h2 {
-      color: #222;
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
     }
     .post-list a {
       display: block;
-      margin: 0.8rem 0;
-      font-size: 1.2rem;
+      margin: 1rem 0;
+      font-size: 1.1rem;
       color: #0077cc;
       text-decoration: none;
     }
@@ -38,6 +39,10 @@
       padding: 1rem;
       overflow-x: auto;
     }
+    .date {
+      font-size: 0.85rem;
+      color: #888;
+    }
   </style>
 </head>
 <body>
@@ -47,35 +52,59 @@
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script>
     const posts = [
-      { file: 'post1.md', title: 'Hello World' },
-      { file: 'second.md', title: 'Second Post' }
+      { file: '2025-07-15-hello.md' },
+      { file: '2025-07-14-second.md' }
     ];
 
     const content = document.getElementById('content');
 
+    // استخراج عنوان و تاریخ از فایل Markdown
+    function parseFrontMatter(markdown) {
+      const match = /^---\n([\s\S]+?)\n---/.exec(markdown);
+      let meta = { title: "Untitled", date: "" };
+      if (match) {
+        match[1].split('\n').forEach(line => {
+          const [key, ...rest] = line.split(':');
+          meta[key.trim()] = rest.join(':').trim();
+        });
+      }
+      return meta;
+    }
+
     function renderList() {
       let html = '<h2>Posts</h2><div class="post-list">';
-      posts.forEach(p => {
-        html += `<a href="#${p.file}">${p.title}</a>`;
+      Promise.all(
+        posts.map(p =>
+          fetch(`posts/${p.file}`)
+            .then(res => res.text())
+            .then(md => {
+              const meta = parseFrontMatter(md);
+              const slug = p.file;
+              const date = meta.date || p.file.slice(0, 10);
+              const title = meta.title || slug;
+              return `<a href="#${slug}">${title} <span class="date">(${date})</span></a>`;
+            })
+        )
+      ).then(links => {
+        html += links.join('');
+        html += '</div>';
+        content.innerHTML = html;
       });
-      html += '</div>';
-      content.innerHTML = html;
     }
 
     function renderPost(filename) {
-      const post = posts.find(p => p.file === filename);
-      if (!post) {
-        content.innerHTML = `<p>Post not found.</p><a href="#" id="back-button">← Back</a>`;
-        return;
-      }
-
       fetch(`posts/${filename}`)
         .then(res => res.text())
         .then(md => {
+          const meta = parseFrontMatter(md);
+          const contentMd = md.replace(/^---\n[\s\S]+?\n---/, '').trim();
+          const title = meta.title || filename;
+          const date = meta.date || filename.slice(0, 10);
           content.innerHTML = `
             <a href="#" id="back-button">← Back</a>
-            <h2>${post.title}</h2>
-            <div>${marked.parse(md)}</div>
+            <h2>${title}</h2>
+            <p class="date">${date}</p>
+            <div>${marked.parse(contentMd)}</div>
           `;
         })
         .catch(() => {
