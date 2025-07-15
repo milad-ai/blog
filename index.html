@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>My Fancy Blog</title>
+  <title>From Loss to Learn</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
   <style>
@@ -32,8 +32,20 @@
       transition: background 0.3s, color 0.3s;
     }
 
-    h1, h2 {
+    h1 {
       color: var(--heading-color);
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    h2 {
+      color: var(--heading-color);
+    }
+
+    .blog-subtitle {
+      font-size: 1rem;
+      color: var(--text-color);
+      margin-bottom: 2rem;
     }
 
     .post-list a {
@@ -98,8 +110,13 @@
   </style>
 </head>
 <body>
-  <button class="theme-toggle" onclick="toggleTheme()">🌗 </button>
-  <h1>📝 My Fancy Blog</h1>
+  <button class="theme-toggle" onclick="toggleTheme()">🌗</button>
+  
+  <h1 id="blog-title"></h1>
+  <div class="blog-subtitle">
+    A friendly space where machine learning gets simple — from model errors to meaningful understanding.
+  </div>
+  
   <div id="content">Loading...</div>
 
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -170,10 +187,24 @@
       }
     }
 
+    function typeTitle(text, elementId, speed = 70) {
+      const el = document.getElementById(elementId);
+      let i = 0;
+      function type() {
+        if (i < text.length) {
+          el.innerHTML += text.charAt(i);
+          i++;
+          setTimeout(type, speed);
+        }
+      }
+      type();
+    }
+
     window.addEventListener('hashchange', router);
     window.addEventListener('load', () => {
       loadTheme();
       router();
+      typeTitle('📝 From loss to learn', 'blog-title');
     });
   </script>
 </body>
