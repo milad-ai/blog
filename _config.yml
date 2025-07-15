@@ -1,0 +1,4 @@
+remote_theme: pages-themes/minimal@latest
+plugins: []
+title: "My Blog"
+paginate: 10
