@@ -155,24 +155,6 @@
   <script>
     const posts = [
       {
-        date: '2025-07-01',
-        tags: ['intro', 'welcome'],
-        en: { title: 'Hello World', file: '2-en.md' },
-        fa: { title: 'سلام دنیا', file: '2-fa.md' }
-      },
-      {
-        date: '2025-07-10',
-        tags: ['dev', 'update'],
-        en: { title: 'Second Post', file: 'post1-en.md' },
-        fa: { title: 'پست دوم', file: 'post1-fa.md' }
-      },
-      {
-        date: '2025-07-01',
-        tags: ['bias'],
-        en: { title: 'Bias', file: '1-en.md' },
-        fa: { title: 'بایاس', file: '1-fa.md' }
-      },
-      {
         date: '2025-07-31',
         tags: ['ml', 'bias'],
         en: { title: 'Inductive Bias', file: 'inductive-bias-en.md' },
@@ -190,11 +172,11 @@
         error: "Error loading post."
       },
       fa: {
-        subtitle: `«تکه‌های کوچیکی از چیزای عمیقی که دارم کشفشون می‌کنم» میلاد وزان`,
+        subtitle: `«تکه‌های کوچیکی از چیزای عمیقی که دارم کشفشون می‌کنم»  `,
         description: `اینجا چیزهایی که درباره یادگیری ماشین، یادگیری عمیق و داده یاد می‌گیرم رو می‌نویسم — از ساخت مدل‌ها و الگوریتم‌ها تا ترفندهای پایگاه‌داده و تحلیل داده. یادداشت‌های کوتاه، ساده و فوری از چیزهایی که الان درگیرشم.`,
-        postsHeading: "پست‌ها",
+        postsHeading: "مطالب",
         back: "← بازگشت",
-        notFound: "پست پیدا نشد.",
+        notFound: "مطلب پیدا نشد.",
         error: "خطا در بارگذاری پست."
       }
     };
@@ -315,7 +297,7 @@
       loadTheme();
       applyTranslations();
       router();
-      typeTitle('📓 DeepBits', 'blog-title');
+      typeTitle('DeepBits', 'blog-title');
       document.querySelector('.lang-toggle').textContent = currentLang === 'en' ? 'FA' : 'EN';
     });
 
