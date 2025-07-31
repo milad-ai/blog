@@ -32,7 +32,6 @@
       transition: background 0.3s, color 0.3s;
     }
 
-    /* راست چین کردن برای زبان فارسی */
     body.rtl {
       direction: rtl;
       text-align: right;
@@ -170,6 +169,12 @@
         tags: ['bias'],
         en: { title: 'Bias', file: '1-en.md' },
         fa: { title: 'بایاس', file: '1-fa.md' }
+      },
+      {
+        date: '2025-07-31',
+        tags: ['ml', 'bias'],
+        en: { title: 'Inductive Bias', file: 'inductive-bias-en.md' },
+        fa: { title: 'بایاس استقرایی', file: 'inductive-bias-fa.md' }
       }
     ];
 
@@ -199,7 +204,6 @@
       document.querySelector('.blog-subtitle').innerHTML = t.subtitle;
       document.querySelector('.brand-description').innerHTML = t.description;
 
-      // تغییر جهت صفحه بر اساس زبان
       if (currentLang === 'fa') {
         document.body.classList.add('rtl');
       } else {
@@ -211,7 +215,7 @@
       currentLang = currentLang === 'en' ? 'fa' : 'en';
       localStorage.setItem('lang', currentLang);
       applyTranslations();
-      router(); // برای بروزرسانی متن‌ها و پست‌ها
+      router();
       document.querySelector('.lang-toggle').textContent = currentLang === 'en' ? 'FA' : 'EN';
     }
 
