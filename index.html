@@ -32,6 +32,15 @@
       transition: background 0.3s, color 0.3s;
     }
 
+    /* راست چین کردن برای زبان فارسی */
+    body.rtl {
+      direction: rtl;
+      text-align: right;
+    }
+    body.rtl .post-list a {
+      text-align: right;
+    }
+
     h1 {
       color: var(--heading-color);
       font-size: 2rem;
@@ -143,7 +152,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script>
-    /* پست‌ها با عنوان و فایل جدا برای هر زبان */
     const posts = [
       {
         date: '2025-07-01',
@@ -190,6 +198,13 @@
       const t = translations[currentLang];
       document.querySelector('.blog-subtitle').innerHTML = t.subtitle;
       document.querySelector('.brand-description').innerHTML = t.description;
+
+      // تغییر جهت صفحه بر اساس زبان
+      if (currentLang === 'fa') {
+        document.body.classList.add('rtl');
+      } else {
+        document.body.classList.remove('rtl');
+      }
     }
 
     function toggleLanguage() {
