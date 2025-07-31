@@ -114,38 +114,99 @@
       font-size: 0.9rem;
       border-radius: 6px;
       cursor: pointer;
+      margin-left: 0.5rem;
+    }
+
+    .lang-toggle {
+      position: fixed;
+      top: 1rem;
+      right: 5rem;
+      background: none;
+      border: 1px solid var(--text-color);
+      color: var(--text-color);
+      padding: 0.4rem 0.8rem;
+      font-size: 0.9rem;
+      border-radius: 6px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
   <button class="theme-toggle" onclick="toggleTheme()">🌗</button>
+  <button class="lang-toggle" onclick="toggleLanguage()">FA</button>
   
   <h1 id="blog-title"></h1>
-  <div class="blog-subtitle">
-    "Little bits of deep stuff I’m figuring out."
-    Milad Vazan
-  </div>
-  <div class="brand-description">
-    This is where I share what I’m learning about machine learning, deep learning, and data — from building models and algorithms to database tricks and analytics tips. Quick notes, simple takeaways, just bits of deep tech I’m into right now.
-  </div>
+  <div class="blog-subtitle"></div>
+  <div class="brand-description"></div>
 
   <div id="content">Loading...</div>
 
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script>
+    /* پست‌ها با عنوان و فایل جدا برای هر زبان */
     const posts = [
-      { file: '2.md', title: 'Hello World', date: '2025-07-01', tags: ['intro', 'welcome'] },
-      { file: 'post1.md', title: 'Second Post', date: '2025-07-10', tags: ['dev', 'update'] },
-      { file: '1.md', title: 'bias', date: '2025-07-01', tags: ['intro', 'welcome'] }
+      {
+        date: '2025-07-01',
+        tags: ['intro', 'welcome'],
+        en: { title: 'Hello World', file: '2-en.md' },
+        fa: { title: 'سلام دنیا', file: '2-fa.md' }
+      },
+      {
+        date: '2025-07-10',
+        tags: ['dev', 'update'],
+        en: { title: 'Second Post', file: 'post1-en.md' },
+        fa: { title: 'پست دوم', file: 'post1-fa.md' }
+      },
+      {
+        date: '2025-07-01',
+        tags: ['bias'],
+        en: { title: 'Bias', file: '1-en.md' },
+        fa: { title: 'بایاس', file: '1-fa.md' }
+      }
     ];
 
-    const content = document.getElementById('content');
+    const translations = {
+      en: {
+        subtitle: `"Little bits of deep stuff I’m figuring out." Milad Vazan`,
+        description: `This is where I share what I’m learning about machine learning, deep learning, and data — from building models and algorithms to database tricks and analytics tips. Quick notes, simple takeaways, just bits of deep tech I’m into right now.`,
+        postsHeading: "Posts",
+        back: "← Back",
+        notFound: "Post not found.",
+        error: "Error loading post."
+      },
+      fa: {
+        subtitle: `«تکه‌های کوچیکی از چیزای عمیقی که دارم کشفشون می‌کنم» میلاد وازان`,
+        description: `اینجا چیزهایی که درباره یادگیری ماشین، یادگیری عمیق و داده یاد می‌گیرم رو می‌نویسم — از ساخت مدل‌ها و الگوریتم‌ها تا ترفندهای پایگاه‌داده و تحلیل داده. یادداشت‌های کوتاه، ساده و فوری از چیزهایی که الان درگیرشم.`,
+        postsHeading: "پست‌ها",
+        back: "← بازگشت",
+        notFound: "پست پیدا نشد.",
+        error: "خطا در بارگذاری پست."
+      }
+    };
+
+    let currentLang = localStorage.getItem('lang') || 'en';
+
+    function applyTranslations() {
+      const t = translations[currentLang];
+      document.querySelector('.blog-subtitle').innerHTML = t.subtitle;
+      document.querySelector('.brand-description').innerHTML = t.description;
+    }
+
+    function toggleLanguage() {
+      currentLang = currentLang === 'en' ? 'fa' : 'en';
+      localStorage.setItem('lang', currentLang);
+      applyTranslations();
+      router(); // برای بروزرسانی متن‌ها و پست‌ها
+      document.querySelector('.lang-toggle').textContent = currentLang === 'en' ? 'FA' : 'EN';
+    }
 
     function renderList() {
-      let html = `<h2>Posts</h2><div class="post-list">`;
+      const t = translations[currentLang];
+      let html = `<h2>${t.postsHeading}</h2><div class="post-list">`;
       posts.forEach(p => {
+        const postData = p[currentLang];
         html += `
-          <a href="#${p.file}">${p.title}</a>
+          <a href="#${postData.file}">${postData.title}</a>
           <div class="post-meta">
             🗓 ${p.date} | ${p.tags.map(tag => `<span class="tag">${tag}</span>`).join(' ')}
           </div>`;
@@ -155,9 +216,10 @@
     }
 
     function renderPost(filename) {
-      const post = posts.find(p => p.file === filename);
+      const t = translations[currentLang];
+      const post = posts.find(p => p[currentLang].file === filename);
       if (!post) {
-        content.innerHTML = `<p>Post not found.</p><a href="#" id="back-button">← Back</a>`;
+        content.innerHTML = `<p>${t.notFound}</p><a href="#" id="back-button">${t.back}</a>`;
         return;
       }
 
@@ -165,14 +227,14 @@
         .then(res => res.text())
         .then(md => {
           content.innerHTML = `
-            <a href="#" id="back-button">← Back</a>
-            <h2>${post.title}</h2>
+            <a href="#" id="back-button">${t.back}</a>
+            <h2>${post[currentLang].title}</h2>
             <div class="post-meta">🗓 ${post.date} | ${post.tags.map(tag => `<span class="tag">${tag}</span>`).join(' ')}</div>
             <div>${marked.parse(md)}</div>
           `;
         })
         .catch(() => {
-          content.innerHTML = `<p>Error loading post.</p><a href="#" id="back-button">← Back</a>`;
+          content.innerHTML = `<p>${t.error}</p><a href="#" id="back-button">${t.back}</a>`;
         });
     }
 
@@ -215,7 +277,9 @@
     window.addEventListener('load', () => {
       loadTheme();
       router();
+      applyTranslations();
       typeTitle('📓 DeepBits', 'blog-title');
+      document.querySelector('.lang-toggle').textContent = currentLang === 'en' ? 'FA' : 'EN';
     });
   </script>
 </body>
