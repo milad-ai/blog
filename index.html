@@ -123,6 +123,7 @@
       border-radius: 6px;
       cursor: pointer;
       margin-left: 0.5rem;
+      z-index: 1000;
     }
 
     .lang-toggle {
@@ -136,6 +137,7 @@
       font-size: 0.9rem;
       border-radius: 6px;
       cursor: pointer;
+      z-index: 1000;
     }
   </style>
 </head>
@@ -212,10 +214,26 @@
     }
 
     function toggleLanguage() {
+      const oldLang = currentLang;
       currentLang = currentLang === 'en' ? 'fa' : 'en';
       localStorage.setItem('lang', currentLang);
       applyTranslations();
-      router();
+
+      const currentHash = location.hash.slice(1);
+      if (!currentHash) {
+        // صفحه لیست
+        router();
+      } else {
+        // صفحه پست
+        const post = posts.find(p => p[oldLang].file === currentHash);
+        if (post) {
+          // تغییر آدرس به فایل زبان جدید برای همان پست
+          location.hash = post[currentLang].file;
+        } else {
+          // اگر پست یافت نشد، به لیست برگرد
+          location.hash = '';
+        }
+      }
       document.querySelector('.lang-toggle').textContent = currentLang === 'en' ? 'FA' : 'EN';
     }
 
@@ -295,10 +313,18 @@
     window.addEventListener('hashchange', router);
     window.addEventListener('load', () => {
       loadTheme();
-      router();
       applyTranslations();
+      router();
       typeTitle('📓 DeepBits', 'blog-title');
       document.querySelector('.lang-toggle').textContent = currentLang === 'en' ? 'FA' : 'EN';
+    });
+
+    // بازگشت به لیست پست‌ها وقتی روی دکمه back کلیک می‌شود
+    document.addEventListener('click', e => {
+      if (e.target && e.target.id === 'back-button') {
+        e.preventDefault();
+        location.hash = '';
+      }
     });
   </script>
 </body>
