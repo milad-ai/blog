@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>DeepBits</title>
+  <title>برنامه‌نویسی پیشرفته - راست</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg-color: #f7f9fc;
@@ -12,6 +12,7 @@
       --link-color: #0077cc;
       --heading-color: #222;
       --code-bg: #eee;
+      --card-bg: white;
     }
 
     body.dark {
@@ -20,13 +21,14 @@
       --link-color: #4ea3ff;
       --heading-color: #fff;
       --code-bg: #1e1e1e;
+      --card-bg: #1e1e1e;
     }
 
     body {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Inter', 'Vazirmatn', sans-serif;
       background: var(--bg-color);
       color: var(--text-color);
-      max-width: 800px;
+      max-width: 900px;
       margin: auto;
       padding: 2rem;
       transition: background 0.3s, color 0.3s;
@@ -35,45 +37,121 @@
     body.rtl {
       direction: rtl;
       text-align: right;
+      font-family: 'Vazirmatn', 'Inter', sans-serif;
     }
-    body.rtl .post-list a {
-      text-align: right;
+
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding: 2rem;
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
 
     h1 {
       color: var(--heading-color);
-      font-size: 2rem;
+      font-size: 2.5rem;
       margin-bottom: 0.5rem;
+      font-weight: 700;
     }
 
     h2 {
       color: var(--heading-color);
+      border-bottom: 2px solid var(--link-color);
+      padding-bottom: 0.5rem;
+      display: inline-block;
     }
 
-    .blog-subtitle {
-      font-size: 1rem;
-      color: var(--text-color);
+    .university-name {
+      font-size: 1.2rem;
+      color: #666;
+      margin: 0.5rem 0;
+    }
+
+    body.dark .university-name {
+      color: #aaa;
+    }
+
+    .course-info {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      line-height: 1.8;
+    }
+
+    .course-info p {
+      margin: 0.5rem 0;
+    }
+
+    .sessions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .session-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+
+    .session-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--link-color);
+    }
+
+    .session-title {
+      font-size: 1.2rem;
+      color: var(--link-color);
+      margin: 0 0 0.5rem 0;
+      font-weight: bold;
+    }
+
+    .session-date {
+      font-size: 0.9rem;
+      color: #666;
       margin-bottom: 1rem;
-      font-style: italic;
     }
 
-    .brand-description {
+    body.dark .session-date {
+      color: #aaa;
+    }
+
+    .session-desc {
+      margin: 0.5rem 0 1rem 0;
       font-size: 0.95rem;
       color: var(--text-color);
-      margin-bottom: 2rem;
-      line-height: 1.5;
+      opacity: 0.9;
     }
 
-    .post-list a {
-      display: block;
-      margin: 0.8rem 0 0.2rem;
-      font-size: 1.1rem;
-      color: var(--link-color);
-      text-decoration: none;
+    .tag {
+      display: inline-block;
+      background: #e0e0e0;
+      padding: 4px 12px;
+      margin: 4px 4px 0 0;
+      font-size: 0.8rem;
+      border-radius: 20px;
+      color: #333;
     }
 
-    .post-list a:hover {
-      text-decoration: underline;
+    body.dark .tag {
+      background: #333;
+      color: #ddd;
+    }
+
+    .resources {
+      margin-top: 2rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 1.5rem;
     }
 
     #back-button {
@@ -81,189 +159,242 @@
       margin: 1rem 0;
       color: var(--link-color);
       text-decoration: none;
+      cursor: pointer;
+      font-size: 1.1rem;
     }
 
-    pre {
+    #back-button:hover {
+      text-decoration: underline;
+    }
+
+    .post-content {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 2rem;
+      margin: 2rem 0;
+      line-height: 1.8;
+    }
+
+    .post-content pre {
       background: var(--code-bg);
       padding: 1rem;
-      overflow-x: auto;
       border-radius: 8px;
+      overflow-x: auto;
     }
 
-    .tag {
-      display: inline-block;
-      background: #ccc;
-      padding: 2px 8px;
-      margin: 0 5px;
-      font-size: 0.85rem;
+    .post-content code {
+      background: var(--code-bg);
+      padding: 0.2rem 0.4rem;
       border-radius: 4px;
-      color: #333;
-    }
-
-    body.dark .tag {
-      background: #333;
-      color: #ccc;
-    }
-
-    .post-meta {
-      font-size: 0.9rem;
-      color: #666;
-      margin-bottom: 1rem;
     }
 
     .theme-toggle {
       position: fixed;
       top: 1rem;
-      right: 1rem;
-      background: none;
+      left: 1rem;
+      background: var(--card-bg);
       border: 1px solid var(--text-color);
       color: var(--text-color);
       padding: 0.4rem 0.8rem;
       font-size: 0.9rem;
       border-radius: 6px;
       cursor: pointer;
-      margin-left: 0.5rem;
       z-index: 1000;
+      transition: all 0.3s ease;
     }
 
-    .lang-toggle {
-      position: fixed;
-      top: 1rem;
-      right: 5rem;
-      background: none;
-      border: 1px solid var(--text-color);
-      color: var(--text-color);
-      padding: 0.4rem 0.8rem;
+    .theme-toggle:hover {
+      background: var(--link-color);
+      color: white;
+    }
+
+    footer {
+      margin-top: 4rem;
+      text-align: center;
+      color: #666;
       font-size: 0.9rem;
-      border-radius: 6px;
-      cursor: pointer;
-      z-index: 1000;
+      padding: 2rem 0;
+      border-top: 1px solid #ccc;
+    }
+
+    body.dark footer {
+      color: #aaa;
+      border-top-color: #333;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-color);
     }
   </style>
 </head>
 <body>
-  <button class="theme-toggle" onclick="toggleTheme()">🌗</button>
-  <button class="lang-toggle" onclick="toggleLanguage()">FA</button>
+  <button class="theme-toggle" onclick="toggleTheme()">🌗 تغییر تم</button>
   
-  <h1 id="blog-title"></h1>
-  <div class="blog-subtitle"></div>
-  <div class="brand-description"></div>
+  <div class="header">
+    <h1 id="blog-title"></h1>
+    <div class="university-name">دانشکده ریاضی - گروه ریاضیات و کاربردها</div>
+  </div>
 
-  <div id="content">Loading...</div>
+  <div class="course-info" id="course-info">
+    <!-- اطلاعات درس با تایپ‌رایتر نمایش داده می‌شود -->
+  </div>
+
+  <div id="content">
+    <h2>📅 جلسات درس</h2>
+    <div class="sessions-grid" id="sessions-container"></div>
+
+    <div class="resources">
+      <h2>📚 منابع درس</h2>
+      <ul id="resources-list"></ul>
+    </div>
+  </div>
+
+  <footer>
+    <p>دانشگاه شهید بهشتی - نیم‌سال دوم ۱۴۰۵-۱۴۰۴</p>
+    <p>برنامه‌نویسی پیشرفته با زبان راست (Rust)</p>
+  </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script>
-    const posts = [
+    // تنظیم marked برای پشتیبانی از فارسی
+    marked.setOptions({
+      breaks: true,
+      gfm: true
+    });
+
+    const courseData = {
+      title: 'برنامه‌نویسی پیشرفته',
+      subtitle: 'پیش‌نیاز: برنامه‌نویسی مقدماتی',
+      semester: 'نیم‌سال دوم ۱۴۰۵-۱۴۰۴',
+      instructor: 'میلاد وزان',
+      language: 'Rust',
+      description: 'در این درس با مفاهیم پیشرفته برنامه‌نویسی با زبان راست آشنا می‌شویم '
+    };
+
+    // فقط جلسه اول - بقیه بعداً اضافه می‌شن
+    const sessions = [
       {
-        date: '2025-07-31',
-        tags: ['ml', 'bias'],
-        en: { title: 'Inductive Bias', file: 'inductive-bias-en.md' },
-        fa: { title: 'بایاس استقرایی', file: 'inductive-bias-fa.md' }
+        number: 1,
+        date: '2 اسفند',
+        title: 'مقدمه و آشنایی با راست',
+        description: 'آشنایی با درس',
+        file: 'jalesat/jalase1.md',
+        tags: ['intro', 'setup', 'cargo']
       }
     ];
 
-    const translations = {
-      en: {
-        subtitle: `"Little bits of deep stuff I’m figuring out." Milad Vazan`,
-        description: `This is where I share what I’m learning about machine learning, deep learning, and data — from building models and algorithms to database tricks and analytics tips. Quick notes, simple takeaways, just bits of deep tech I’m into right now.`,
-        postsHeading: "Posts",
-        back: "← Back",
-        notFound: "Post not found.",
-        error: "Error loading post."
-      },
-      fa: {
-        subtitle: `«تکه‌های کوچیکی از چیزای عمیقی که دارم کشفشون می‌کنم»  `,
-        description: `اینجا چیزهایی که درباره یادگیری ماشین، یادگیری عمیق و داده یاد می‌گیرم رو می‌نویسم — از ساخت مدل‌ها و الگوریتم‌ها تا ترفندهای پایگاه‌داده و تحلیل داده. یادداشت‌های کوتاه، ساده و فوری از چیزهایی که الان درگیرشم.`,
-        postsHeading: "مطالب",
-        back: "← بازگشت",
-        notFound: "مطلب پیدا نشد.",
-        error: "خطا در بارگذاری پست."
-      }
-    };
+    const resources = [
+      '📗 Rust by Example',
+      '📕 Programming Rust by Jim Blandy',
+      '🔗 مستندات رسمی: doc.rust-lang.org',
+    ];
 
-    let currentLang = localStorage.getItem('lang') || 'en';
-
-    function applyTranslations() {
-      const t = translations[currentLang];
-      document.querySelector('.blog-subtitle').innerHTML = t.subtitle;
-      document.querySelector('.brand-description').innerHTML = t.description;
-
-      if (currentLang === 'fa') {
-        document.body.classList.add('rtl');
-      } else {
-        document.body.classList.remove('rtl');
-      }
-    }
-
-    function toggleLanguage() {
-      const oldLang = currentLang;
-      currentLang = currentLang === 'en' ? 'fa' : 'en';
-      localStorage.setItem('lang', currentLang);
-      applyTranslations();
-
-      const currentHash = location.hash.slice(1);
-      if (!currentHash) {
-        // صفحه لیست
-        router();
-      } else {
-        // صفحه پست
-        const post = posts.find(p => p[oldLang].file === currentHash);
-        if (post) {
-          // تغییر آدرس به فایل زبان جدید برای همان پست
-          location.hash = post[currentLang].file;
-        } else {
-          // اگر پست یافت نشد، به لیست برگرد
-          location.hash = '';
+    function typeWriter(text, elementId, speed = 50) {
+      const el = document.getElementById(elementId);
+      if (!el) return;
+      
+      el.innerHTML = '';
+      let i = 0;
+      
+      function type() {
+        if (i < text.length) {
+          if (text.charAt(i) === '\n') {
+            el.innerHTML += '<br>';
+          } else {
+            el.innerHTML += text.charAt(i);
+          }
+          i++;
+          setTimeout(type, speed);
         }
       }
-      document.querySelector('.lang-toggle').textContent = currentLang === 'en' ? 'FA' : 'EN';
+      
+      type();
     }
 
-    function renderList() {
-      const t = translations[currentLang];
-      let html = `<h2>${t.postsHeading}</h2><div class="post-list">`;
-      posts.forEach(p => {
-        const postData = p[currentLang];
-        html += `
-          <a href="#${postData.file}">${postData.title}</a>
-          <div class="post-meta">
-            🗓 ${p.date} | ${p.tags.map(tag => `<span class="tag">${tag}</span>`).join(' ')}
-          </div>`;
+    function renderSessions() {
+      const container = document.getElementById('sessions-container');
+      if (!container) return;
+      
+      container.innerHTML = '';
+      
+      sessions.forEach(session => {
+        const card = document.createElement('div');
+        card.className = 'session-card';
+        card.onclick = () => loadSession(session.file);
+        
+        const tagsList = session.tags.map(tag => `<span class="tag">${tag}</span>`).join('');
+        
+        card.innerHTML = `
+          <div class="session-title">جلسه ${session.number}: ${session.title}</div>
+          <div class="session-date">📅 ${session.date}</div>
+          <div class="session-desc">${session.description}</div>
+          <div>${tagsList}</div>
+        `;
+        
+        container.appendChild(card);
       });
-      html += `</div>`;
-      content.innerHTML = html;
     }
 
-    function renderPost(filename) {
-      const t = translations[currentLang];
-      const post = posts.find(p => p[currentLang].file === filename);
-      if (!post) {
-        content.innerHTML = `<p>${t.notFound}</p><a href="#" id="back-button">${t.back}</a>`;
-        return;
-      }
+    function renderResources() {
+      const list = document.getElementById('resources-list');
+      if (!list) return;
+      
+      list.innerHTML = '';
+      
+      resources.forEach(resource => {
+        const li = document.createElement('li');
+        li.textContent = resource;
+        li.style.margin = '0.5rem 0';
+        list.appendChild(li);
+      });
+    }
 
-      fetch(`posts/${filename}`)
-        .then(res => res.text())
+    function loadSession(filename) {
+      const contentDiv = document.getElementById('content');
+      
+      fetch(filename)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('فایل پیدا نشد');
+          }
+          return response.text();
+        })
         .then(md => {
-          content.innerHTML = `
-            <a href="#" id="back-button">${t.back}</a>
-            <h2>${post[currentLang].title}</h2>
-            <div class="post-meta">🗓 ${post.date} | ${post.tags.map(tag => `<span class="tag">${tag}</span>`).join(' ')}</div>
-            <div>${marked.parse(md)}</div>
+          contentDiv.innerHTML = `
+            <a href="#" id="back-button" onclick="showSessionsList(); return false;">← بازگشت به لیست جلسات</a>
+            <div class="post-content">
+              ${marked.parse(md)}
+            </div>
           `;
         })
-        .catch(() => {
-          content.innerHTML = `<p>${t.error}</p><a href="#" id="back-button">${t.back}</a>`;
+        .catch(error => {
+          contentDiv.innerHTML = `
+            <a href="#" id="back-button" onclick="showSessionsList(); return false;">← بازگشت به لیست جلسات</a>
+            <div class="post-content">
+              <p style="color: red;">خطا در بارگذاری جلسه: ${error.message}</p>
+              <p>فایل ${filename} یافت نشد. لطفاً فایل Markdown را در مسیر صحیح قرار دهید.</p>
+            </div>
+          `;
         });
     }
 
-    function router() {
-      const hash = location.hash.slice(1);
-      if (hash) {
-        renderPost(hash);
-      } else {
-        renderList();
-      }
+    function showSessionsList() {
+      const contentDiv = document.getElementById('content');
+      
+      contentDiv.innerHTML = `
+        <h2>📅 جلسات درس</h2>
+        <div class="sessions-grid" id="sessions-container"></div>
+
+        <div class="resources">
+          <h2>📚 منابع درس</h2>
+          <ul id="resources-list"></ul>
+        </div>
+      `;
+      
+      renderSessions();
+      renderResources();
     }
 
     function toggleTheme() {
@@ -279,34 +410,32 @@
       }
     }
 
-    function typeTitle(text, elementId, speed = 70) {
-      const el = document.getElementById(elementId);
-      let i = 0;
-      function type() {
-        if (i < text.length) {
-          el.innerHTML += text.charAt(i);
-          i++;
-          setTimeout(type, speed);
-        }
-      }
-      type();
+    function getCourseInfoText() {
+      return `🎓 درس ${courseData.title}
+📌 ${courseData.subtitle}
+🗓 ${courseData.semester}
+👨‍🏫 ${courseData.instructor}
+🦀 زبان برنامه‌نویسی: ${courseData.language}
+
+📝 توضیحات:
+${courseData.description}`;
     }
 
-    window.addEventListener('hashchange', router);
     window.addEventListener('load', () => {
       loadTheme();
-      applyTranslations();
-      router();
-      typeTitle('DeepBits', 'blog-title');
-      document.querySelector('.lang-toggle').textContent = currentLang === 'en' ? 'FA' : 'EN';
-    });
-
-    // بازگشت به لیست پست‌ها وقتی روی دکمه back کلیک می‌شود
-    document.addEventListener('click', e => {
-      if (e.target && e.target.id === 'back-button') {
-        e.preventDefault();
-        location.hash = '';
-      }
+      document.body.classList.add('rtl');
+      
+      // تایپ عنوان درس
+      typeWriter(courseData.title, 'blog-title', 70);
+      
+      // تایپ اطلاعات درس با تاخیر
+      setTimeout(() => {
+        typeWriter(getCourseInfoText(), 'course-info', 30);
+      }, 1000);
+      
+      // رندر جلسات و منابع
+      renderSessions();
+      renderResources();
     });
   </script>
 </body>
